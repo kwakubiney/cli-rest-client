@@ -14,6 +14,7 @@ type Options struct {
 	TypeOfObject string
 	Fields       string
 	Help		 *bool
+	MapData      map[string]string
 }
 
 type UserService struct {
@@ -57,12 +58,13 @@ func (s *CliHandler) Dispatch() {
 				flag.Usage()
 				return
 			}
-			createFieldKeys := command.ParseFields(s.options.Fields)
-			log.Println(createFieldKeys)
+			createFieldKeys, mapofData := command.ParseFields(s.options.Fields)
+			log.Println(createFieldKeys, mapofData)
 			if !command.ValidateCreateandUpdateUserFields(s.options.Method, createFieldKeys) {
 				flag.Usage()
 				return
 			}
+			s.service.FindByKeys(createFieldKeys)
 			//TODO: pass to create handler based on method.
 		case "update":
 			{
@@ -70,12 +72,12 @@ func (s *CliHandler) Dispatch() {
 					flag.Usage()
 					return
 				}
-				updateFieldKeys := command.ParseFields(s.options.Fields)
+				updateFieldKeys, mapOfData := command.ParseFields(s.options.Fields)
 				if !command.ValidateCreateandUpdateUserFields(s.options.Method, updateFieldKeys) {
 					flag.Usage()
 					return
 				}
-				log.Println(updateFieldKeys)
+				log.Println(updateFieldKeys, mapOfData)
 				//pass to update handler based on method.
 			}
 
@@ -85,12 +87,12 @@ func (s *CliHandler) Dispatch() {
 					flag.Usage()
 					return
 				}
-				deleteFieldKeys := command.ParseFields(s.options.Fields)
+				deleteFieldKeys, mapofData := command.ParseFields(s.options.Fields)
 				if !command.ValidateCreateandUpdateUserFields(s.options.Method, deleteFieldKeys) {
 					flag.Usage()
 					return
 				}
-				log.Println(deleteFieldKeys)
+				log.Println(deleteFieldKeys, mapofData)
 				//pass to delete handler based on method.
 			}
 
