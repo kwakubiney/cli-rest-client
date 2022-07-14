@@ -31,7 +31,7 @@ func ValidateCreateandUpdateUserFields(method string, fieldKeys []string) bool {
 	for _, value := range fieldKeys {
 		if !exists[value] {
 			return false
-		}
+		}	
 	}
 	return true
 }

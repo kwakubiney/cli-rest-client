@@ -15,18 +15,12 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	}
 }
 
-// fetch by keys/key
+// create User
 func (u *UserRepository) CreateUser(user model.User) error {
 	return u.db.Create(&user).Error
 }
 
-// fetch many
-func (u *UserRepository) Find(numResults int) *model.User {
-	// build URL
-
-	// call api util
-
-	// unmarshal results into slice
-
-	return &model.User{}
+// Update user by username
+func (u *UserRepository) UpdateUserByUsername(username string, user model.User) error {
+	return u.db.Model(model.User{}).Where("username = ?", username).Updates(&user).Error
 }
