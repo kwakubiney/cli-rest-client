@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -25,13 +26,13 @@ func New(services *services.UserService) *Server {
 }
 
 func (s *Server) SetupRoutes() *gin.Engine {
-	s.e.GET("/createUser", s.service.FindUsers)
+	s.e.POST("/createUser", s.service.CreateUser)
 	return s.e
 }
 
 func (s *Server) Start() {
 	s.srv = http.Server{
-		Addr:    ":8233",
+		Addr:    fmt.Sprintf(":%s", os.Getenv("PORT")),
 		Handler: s.SetupRoutes(),
 	}
 

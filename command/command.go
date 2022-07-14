@@ -17,7 +17,7 @@ func ParseFields(arguments string) ([]string, map[string]string) {
 }
 
 func ValidateCreateandUpdateUserFields(method string, fieldKeys []string) bool {
-	createUserFields := []string{"username", "age", "email", "gamehours"}
+	createUserFields := []string{"username", "age", "email"}
 	if method == "create" {
 		if len(createUserFields) != len(fieldKeys) {
 			return false
@@ -35,3 +35,5 @@ func ValidateCreateandUpdateUserFields(method string, fieldKeys []string) bool {
 	}
 	return true
 }
+
+
