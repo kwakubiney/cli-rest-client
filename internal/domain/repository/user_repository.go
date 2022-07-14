@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
 	"gorm.io/gorm"
 )
@@ -17,13 +16,8 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 // fetch by keys/key
-func (u *UserRepository) FindByKeys(keys []string, c *gin.Context) *model.User {
-	// build URL
-
-	// call API util to make web request
-
-	// unmarshall response
-	return &model.User{}
+func (u *UserRepository) CreateUser(user model.User) error {
+	return u.db.Create(&user).Error
 }
 
 // fetch many

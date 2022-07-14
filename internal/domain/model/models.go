@@ -1,10 +1,9 @@
 package model
 
 type User struct {
-	Username  string `json:",omitempty"`
-	Age       string `json:",omitempty"`
-	Email     string `json:",omitempty"`
-	GameHours bool   `json:",omitempty"`
+	Username  string `json:"username"`
+	Age       string `json:"age"`
+	Email     string `json:"email"`
 }
 
 type Game struct {

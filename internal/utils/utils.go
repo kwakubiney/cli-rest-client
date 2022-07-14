@@ -8,7 +8,7 @@ import (
 )
 
 
-func MakeRequest(route string, port string, requestBody interface{}, method string) (*http.Response, error) {
+func MakeRequest(route string, requestBody interface{}, method string) (*http.Response, error) {
 	body, err := json.Marshal(requestBody)
 	if err != nil {
 		return nil, err
