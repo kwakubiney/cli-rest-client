@@ -1,104 +1,75 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"log"
 
 	"github.com/kwakubiney/canonical-take-home/command"
-	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
-	"github.com/kwakubiney/canonical-take-home/internal/domain/repository"
 )
 
 type Options struct {
 	Method       string
 	TypeOfObject string
 	Fields       string
-	Help		 *bool
+	Help         *bool
 	MapData      map[string]string
-}
-
-type UserService struct {
-	repository repository.UserRepository
-}
-
-func NewUserService(repository repository.UserRepository) *UserService {
-	return &UserService{
-		repository: repository,
-	}
-}
-
-// find all
-func (u *UserService) FindByKeys(keys []string) (*model.User, error) {
-	res  := u.repository.FindByKeys(keys)
-	return res, nil
+	FieldKeys    []string
 }
 
 type CliHandler struct {
-	options Options
-	service UserService
+	Options *Options
 }
 
-
-func NewCliHandler(opts Options, service UserService) *CliHandler{
+func NewCliHandler(opts *Options) *CliHandler {
 	return &CliHandler{
-		options: opts,
-		service: service,
+		Options: opts,
 	}
 }
 
-func (s *CliHandler) Dispatch() {
-	if *s.options.Help || s.options.Method == "" {
-		flag.Usage()
-		return
+func (s *CliHandler) Dispatch() error{
+	if *s.Options.Help || s.Options.Method == "" {
+		return errors.New("unrecognizable command. check --help")
 	}
-	if s.options.TypeOfObject == "user" {
-		switch s.options.Method {
+	if s.Options.TypeOfObject == "user" {
+		switch s.Options.Method {
 		case "create":
-			if s.options.TypeOfObject== "" || s.options.Fields == "" {
-				flag.Usage()
-				return
+			if s.Options.TypeOfObject == "" || s.Options.Fields == "" {
+				return errors.New("unrecognizable command. check --help")
 			}
-			createFieldKeys, mapofData := command.ParseFields(s.options.Fields)
-			log.Println(createFieldKeys, mapofData)
-			if !command.ValidateCreateandUpdateUserFields(s.options.Method, createFieldKeys) {
-				flag.Usage()
-				return
+			createFieldKeys, mapofData := command.ParseFields(s.Options.Fields)
+			s.Options.FieldKeys, s.Options.MapData = createFieldKeys, mapofData
+			if !command.ValidateCreateandUpdateUserFields(s.Options.Method, createFieldKeys) {
+				return errors.New("urecognizable command. check --help")
 			}
-			s.service.FindByKeys(createFieldKeys)
-			//TODO: pass to create handler based on method.
 		case "update":
 			{
-				if s.options.TypeOfObject == "" || s.options.Fields == "" {
-					flag.Usage()
-					return
+				if s.Options.TypeOfObject == "" || s.Options.Fields == "" {
+					return errors.New("unrecognizable command. check --help")
 				}
-				updateFieldKeys, mapOfData := command.ParseFields(s.options.Fields)
-				if !command.ValidateCreateandUpdateUserFields(s.options.Method, updateFieldKeys) {
-					flag.Usage()
-					return
+				updateFieldKeys, mapOfData := command.ParseFields(s.Options.Fields)
+				if !command.ValidateCreateandUpdateUserFields(s.Options.Method, updateFieldKeys) {
+					return errors.New("unrecognizable command. check --help")
 				}
 				log.Println(updateFieldKeys, mapOfData)
-				//pass to update handler based on method.
+				s.Options.FieldKeys, s.Options.MapData = updateFieldKeys, mapOfData
 			}
-
 		case "delete":
 			{
-				if s.options.TypeOfObject == "" || s.options.Fields == "" {
+				if s.Options.TypeOfObject == "" || s.Options.Fields == "" {
 					flag.Usage()
-					return
+					return errors.New("unrecognizable command. check --help")
 				}
-				deleteFieldKeys, mapofData := command.ParseFields(s.options.Fields)
-				if !command.ValidateCreateandUpdateUserFields(s.options.Method, deleteFieldKeys) {
-					flag.Usage()
-					return
+				deleteFieldKeys, mapofData := command.ParseFields(s.Options.Fields)
+				if !command.ValidateCreateandUpdateUserFields(s.Options.Method, deleteFieldKeys) {
+					return errors.New("unrecognizable command. check --help")
 				}
-				log.Println(deleteFieldKeys, mapofData)
-				//pass to delete handler based on method.
+				s.Options.FieldKeys, s.Options.MapData = deleteFieldKeys, mapofData
 			}
 
 		default:
-			flag.Usage()
-			return
+			return errors.New("unrecognizable command. Check --help")
 		}
-}
+	}
+	return nil
 }
