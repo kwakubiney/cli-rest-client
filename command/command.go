@@ -4,7 +4,6 @@ import (
 	"strings"
 )
 
-
 func ParseFields(arguments string) ([]string, map[string]string) {
 	var fieldKeys []string
 	mapOfFields := make(map[string]string)
