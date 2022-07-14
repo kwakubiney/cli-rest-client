@@ -15,9 +15,14 @@ import (
 
 func main() {
 	opts := &cli.Options{}
-	flag.StringVar(&opts.Method, "m", "", "Specify method to retrieve user data with flag values:\n"+
+	flag.StringVar(&opts.Method, "m", "", "Specify method to retrieve user data:\n"+
 		"Example: -m create")
 
+	//update :  -m update -where username -type user -fields age=12,email=k@mail.com
+
+	flag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user data:\n"+
+		"Example(where is limited to object's name): -where kb")
+	
 	flag.StringVar(&opts.TypeOfObject, "type", "", "Specify type of repository:\n"+
 		"Example: -type user")
 

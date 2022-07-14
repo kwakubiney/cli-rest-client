@@ -26,7 +26,9 @@ func New(services *services.UserService) *Server {
 }
 
 func (s *Server) SetupRoutes() *gin.Engine {
-	s.e.POST("/createUser", s.service.CreateUser)
+	s.e.POST("/User", s.service.CreateUser)
+	s.e.PUT("/User", s.service.UpdateUser)
+	s.e.GET("/User", s.service.CreateUser)
 	return s.e
 }
 
