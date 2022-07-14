@@ -18,8 +18,8 @@ func main() {
 	flag.StringVar(&opts.Method, "m", "", "Specify method to retrieve user data:\n"+
 		"Example: -m create")
 
-	//update :  -m update -where username -type user -fields age=12,email=bitch@mail.com
-	
+	//update :  -m update -where username -type user -fields age=12,email=k@mail.com
+
 	flag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user data:\n"+
 		"Example(where is limited to object's name): -where kb")
 	
