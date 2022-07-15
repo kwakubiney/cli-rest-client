@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
+	"os"
 
 	"github.com/kwakubiney/canonical-take-home/internal/config"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/repository"
@@ -11,30 +11,12 @@ import (
 	"github.com/kwakubiney/canonical-take-home/internal/postgres"
 	"github.com/kwakubiney/canonical-take-home/internal/server"
 	"github.com/kwakubiney/canonical-take-home/internal/services"
+	"github.com/kwakubiney/canonical-take-home/parser"
 )
 
 func main() {
 	opts := &cli.Options{}
-	flag.StringVar(&opts.Method, "m", "", "Specify method to retrieve user data:\n"+
-		"Example: -m create")
-
-	//update :  -m update -where username -type user -fields age=12,email=k@mail.com
-
-	flag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user data:\n"+
-		"Example(where is limited to object's name): -where kb")
-	
-	flag.StringVar(&opts.TypeOfObject, "type", "", "Specify type of repository:\n"+
-		"Example: -type user")
-
-	flag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user(s) data, available repositories:\n"+
-		"Example: -fields username=kwame,age=9,email=kwakubiney@gmail.com")
-
-	flag.Usage = func() {
-		fmt.Printf("Usage:\n")
-		flag.PrintDefaults()
-	}
-	opts.Help = flag.Bool("help", false, "Show usage")
-	flag.Parse()
+	parser.ParseCommands(os.Args[1], opts)
 	config.LoadNormalConfig()
 	db, err := postgres.Init()
 	if err != nil {
