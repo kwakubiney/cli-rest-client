@@ -1,20 +1,15 @@
 package config
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 func LoadNormalConfig() error {
-	dir, err := os.Getwd()
-	if err != nil {
-		return err
-	}
-
-	pathToEnvFile := fmt.Sprintf("%s/.env", dir)
-
+	pathToEnvFile := "./.env"
+	log.Println(pathToEnvFile)
 	if _, err := os.Stat(pathToEnvFile); err == nil {
 		return godotenv.Load(pathToEnvFile)
 	}

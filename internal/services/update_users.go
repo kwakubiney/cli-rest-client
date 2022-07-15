@@ -8,12 +8,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
 )
- 
 
-func (u *UserService) UpdateUser(c *gin.Context){
+func (u *UserService) UpdateUser(c *gin.Context) {
+	log.Println("=> PUT https://localhost/user\n" +
+		"<=")
 	var user model.User
 	err := c.BindJSON(&user)
-	if err != nil { 
+	if err != nil {
 		log.Println(err)
 		flag.Usage()
 		c.Status(http.StatusBadRequest)
@@ -28,11 +29,7 @@ func (u *UserService) UpdateUser(c *gin.Context){
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "user successfully updated",
-		"user": user})
+		"user":    user})
 }
-
-
-
-

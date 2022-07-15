@@ -1,12 +1,10 @@
 package utils
 
-
 import (
 	"bytes"
 	"encoding/json"
 	"net/http"
 )
-
 
 func MakeRequest(route string, requestBody interface{}, method string) (*http.Response, error) {
 	body, err := json.Marshal(requestBody)
@@ -24,4 +22,3 @@ func MakeRequest(route string, requestBody interface{}, method string) (*http.Re
 	}
 	return resp, err
 }
-

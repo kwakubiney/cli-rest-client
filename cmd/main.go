@@ -15,22 +15,31 @@ import (
 
 func main() {
 	opts := &cli.Options{}
-	flag.StringVar(&opts.Method, "m", "", "Specify method to retrieve user data:\n"+
+
+	flag.StringVar(&opts.Method, "m", "", "Specify operation:\n"+
 		"Example: -m create")
 
-	//update :  -m update -where username -type user -fields age=12,email=k@mail.com
+	flag.StringVar(&opts.Where, "where", "", "Specify filter field value to update user data:\n"+
+		"Example: -where kb")
 
-	flag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user data:\n"+
-		"Example(where is limited to object's name): -where kb")
-	
-	flag.StringVar(&opts.TypeOfObject, "type", "", "Specify type of repository:\n"+
+	flag.StringVar(&opts.TypeOfObject, "type", "", "Specify repository:\n"+
 		"Example: -type user")
 
-	flag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user(s) data, available repositories:\n"+
+	flag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user(s) data\n"+
 		"Example: -fields username=kwame,age=9,email=kwakubiney@gmail.com")
+
+	flag.StringVar(&opts.By, "by", "", "Specify single filter field:\n"+
+		"Example: -by username")
 
 	flag.Usage = func() {
 		fmt.Printf("Usage:\n")
+		// x := `usage: [--help] [-m <path>] [-c <name>=<value>]
+		// [--exec-path[=<path>]] [--html-path] [--man-path] [--info-path]
+		// [-p | --paginate | -P | --no-pager] [--no-replace-objects] [--bare]
+		// [--git-dir=<path>] [--work-tree=<path>] [--namespace=<name>]
+		// [--super-prefix=<path>] [--config-env=<name>=<envvar>]
+		// <command> [<args>]
+		// `
 		flag.PrintDefaults()
 	}
 	opts.Help = flag.Bool("help", false, "Show usage")
@@ -58,6 +67,4 @@ func main() {
 		log.Fatal()
 	}
 }
-
-
 

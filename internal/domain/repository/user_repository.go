@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
 	"gorm.io/gorm"
 )
@@ -23,4 +24,13 @@ func (u *UserRepository) CreateUser(user model.User) error {
 // Update user by username
 func (u *UserRepository) UpdateUserByUsername(username string, user model.User) error {
 	return u.db.Model(model.User{}).Where("username = ?", username).Updates(&user).Error
+}
+
+func (u *UserRepository) FilterUser(by string, where string) (*model.User, error) {
+	var user model.User
+	db := u.db.Where(fmt.Sprintf("%s = ?", by), where).Find(&user)
+	if db.Error != nil {
+		return nil, db.Error
+	}
+	return &user, db.Error
 }
