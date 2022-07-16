@@ -4,15 +4,17 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
-	"io"
+
+	"bytes"
+	"encoding/json"
+	"net/http"
 
 	"github.com/kwakubiney/canonical-take-home/command"
-	"net/http"
 	"github.com/kwakubiney/canonical-take-home/internal/utils"
 )
-
 
 type Options struct {
 	Method       string
@@ -22,6 +24,8 @@ type Options struct {
 	MapData      map[string]string
 	FieldKeys    []string
 	Where        string
+	By           string
+	Flag         flag.FlagSet
 }
 
 type CliHandler struct {
@@ -34,11 +38,22 @@ func NewCliHandler(opts *Options) *CliHandler {
 	}
 }
 
-func (s *CliHandler) Dispatch() error{
-	if *s.Options.Help || s.Options.Method == "" {
+func PrettyPrint(response []byte) error {
+	var prettyJSON bytes.Buffer
+	err := json.Indent(&prettyJSON, response, "", "\t")
+	if err != nil {
+		log.Println("JSON parse error: ", err)
+		return err
+	}
+	fmt.Println(prettyJSON.String())
+	return nil
+}
+
+func (s *CliHandler) Dispatch() error {
+	if s.Options.TypeOfObject == "" {
 		return errors.New("unrecognizable command")
 	}
-	
+
 	if s.Options.TypeOfObject == "user" {
 		switch s.Options.Method {
 		case "create":
@@ -51,30 +66,23 @@ func (s *CliHandler) Dispatch() error{
 				return errors.New("unrecognizable command")
 			}
 		case "update":
-			{
-			if s.Options.TypeOfObject == "" || s.Options.Fields == "" || s.Options.Where == ""{
+			if s.Options.TypeOfObject == "" || s.Options.Fields == "" || s.Options.Where == "" {
 				return errors.New("unrecognizable command")
 			}
 			updateFieldKeys, mapOfData := command.ParseFields(s.Options.Fields)
 			if !command.ValidateCreateandUpdateUserFields(s.Options.Method, updateFieldKeys) {
 				return errors.New("unrecognizable command")
 			}
-			log.Println(updateFieldKeys, mapOfData)
 			s.Options.FieldKeys, s.Options.MapData = updateFieldKeys, mapOfData
-			}
 
-		case "delete":
-			{
-			if s.Options.TypeOfObject == "" || s.Options.Fields == "" {
-				flag.Usage()
+		//handle validation on db level
+		case "filter":
+			if s.Options.TypeOfObject == "" || s.Options.Where == "" || s.Options.By == "" {
 				return errors.New("unrecognizable command")
-				}
-			deleteFieldKeys, mapofData := command.ParseFields(s.Options.Fields)
-			if !command.ValidateCreateandUpdateUserFields(s.Options.Method, deleteFieldKeys) {
-				return errors.New("unrecognizable command")
-				}
-			s.Options.FieldKeys, s.Options.MapData = deleteFieldKeys, mapofData
 			}
+			mapOfFields := make(map[string]string)
+			s.Options.MapData = mapOfFields
+			s.Options.MapData[s.Options.By] = s.Options.Where
 
 		default:
 			return errors.New("unrecognizable command")
@@ -83,40 +91,92 @@ func (s *CliHandler) Dispatch() error{
 	return nil
 }
 
-
-func ApiRequestDispatcher(clientHandler *CliHandler) error{
+func ApiRequestDispatcher(clientHandler *CliHandler) error {
 	requestBody := clientHandler.Options.MapData
-	if clientHandler.Options.Method == "create"{
-		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User" ,os.Getenv("PORT")), requestBody, "POST")
-		if err != nil{
-			return err	
-		}
-		if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
+	if clientHandler.Options.Method == "create" {
+		fmt.Println("Creating user...........")
+		fmt.Println("=> POST https://localhost/user\n" +
+		"<=")
+		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "POST")
 		if err != nil {
 			return err
 		}
-		bodyString := string(bodyBytes)
-		log.Println(bodyString)
-	}
-	return nil
+		
+		if resp.StatusCode == http.StatusCreated {
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Println("<=== Resp Status: 201")
+			fmt.Println("===> Response:")
+			PrettyPrint(bodyBytes)
+		}else{
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("===> Response:%d\n", resp.StatusCode)
+			PrettyPrint(bodyBytes)
+			clientHandler.Options.Flag.Usage()
+		}
+
 	}
 
-	if clientHandler.Options.Method == "update"{
-		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User" ,os.Getenv("PORT")), requestBody, "PUT")
-		if err != nil{
-			return err	
-		}
-		if resp.StatusCode == http.StatusOK {
-		bodyBytes, err := io.ReadAll(resp.Body)
+	if clientHandler.Options.Method == "update" {
+		fmt.Println("Updating user...........")
+		fmt.Println("=> PUT https://localhost/user\n" +
+		"<=")
+		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "PUT")
 		if err != nil {
 			return err
 		}
-		bodyString := string(bodyBytes)
-		log.Println(bodyString)
-	}
-	return nil
+		if resp.StatusCode == http.StatusOK {
+			fmt.Println("<=== Resp Status: 200 OK")
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Println("===> Response:")
+			PrettyPrint(bodyBytes)
+		}else{
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("===> Response:%d\n", resp.StatusCode)
+			PrettyPrint(bodyBytes)
+			clientHandler.Options.Flag.Usage()
+		}
+		return nil
 	}
 
+	if clientHandler.Options.Method == "filter" {
+		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User?%s=%s", os.Getenv("PORT"),
+			clientHandler.Options.By, clientHandler.Options.Where), requestBody, "GET")
+		if err != nil {
+			return err
+		}
+		if resp.StatusCode == http.StatusOK {
+			fmt.Println("<=== Rsp Status: 200 OK")
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+
+			fmt.Println("===> Response:")
+			PrettyPrint(bodyBytes)
+
+			return nil
+		}else{
+				bodyBytes, err := io.ReadAll(resp.Body)
+				if err != nil {
+					return err
+				}
+				fmt.Printf("===> Response:%d\n", resp.StatusCode)
+				PrettyPrint(bodyBytes)
+				clientHandler.Options.Flag.Usage()
+			}
+			return nil
+		}
 	return nil
 }

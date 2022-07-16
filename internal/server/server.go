@@ -13,22 +13,22 @@ import (
 
 type Server struct {
 	service *services.UserService
-	e        *gin.Engine
-	srv      http.Server
+	e       *gin.Engine
+	srv     http.Server
 }
 
 func New(services *services.UserService) *Server {
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	return &Server{
 		service: services,
-		e: gin.Default(),
+		e:       gin.New(),
 	}
 }
 
 func (s *Server) SetupRoutes() *gin.Engine {
 	s.e.POST("/User", s.service.CreateUser)
 	s.e.PUT("/User", s.service.UpdateUser)
-	s.e.GET("/User", s.service.CreateUser)
+	s.e.GET("/User", s.service.FilterUser)
 	return s.e
 }
 
@@ -47,19 +47,18 @@ func (s *Server) Start() {
 			log.Println("failed to shutdown server", err)
 		}
 	}()
-	
-	go func(){if err := s.srv.ListenAndServe(); err != nil {
-		if err == http.ErrServerClosed {
-			log.Println("server closed after interruption")
-		} else {
-			log.Println("unexpected server shutdown. err:", err)
+
+	go func() {
+		if err := s.srv.ListenAndServe(); err != nil {
+			if err == http.ErrServerClosed {
+				log.Println("server closed after interruption")
+			} else {
+				log.Println("unexpected server shutdown. err:", err)
+			}
 		}
-	}
 	}()
 }
 
 func (s *Server) Stop() error {
 	return s.srv.Close()
 }
-
-

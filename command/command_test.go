@@ -13,7 +13,7 @@ func TestParseFields(t *testing.T) {
 	assert.Equal(t, []string{"username", "age", "email"}, arrayOfParsedFields)
 	assert.Equal(t, map[string]string{"username": "kwame", "age": "9", "email": "kwakubiney@gmail.com"}, mapOfData)
 	arrayOfParsedFields, mapOfData = command.ParseFields("username=kwame,age=9,email=kwakubiney@gmail.com")
-	assert.Equal(t, []string{"username", "age", "email", "gamehours"}, arrayOfParsedFields)
+	assert.Equal(t, []string{"username", "age", "email"}, arrayOfParsedFields)
 	assert.Equal(t, map[string]string{"username": "kwame", "age": "9", "email": "kwakubiney@gmail.com"}, mapOfData)
 }
 

@@ -8,18 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
 )
- 
+
 type CreateUserRequest struct {
-	Username  string `json:"username" binding:"required"`
-	Age       string `json:"age" binding:"required"`
-	Email     string `json:"email" binding:"required"`
+	Username string `json:"username" binding:"required"`
+	Age      string `json:"age" binding:"required"`
+	Email    string `json:"email" binding:"required"`
 }
 
-func (u *UserService) CreateUser(c *gin.Context){
+func (u *UserService) CreateUser(c *gin.Context) {
 	var newUser model.User
 	var createUserRequest CreateUserRequest
 	err := c.BindJSON(&createUserRequest)
-	if err != nil { 
+	if err != nil {
 		log.Println(err)
 		flag.Usage()
 		c.Status(http.StatusBadRequest)
@@ -34,14 +34,12 @@ func (u *UserService) CreateUser(c *gin.Context){
 	if err != nil {
 		log.Println(err)
 		flag.Usage()
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "user could not be created. check usage.",
+		})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "user successfully created",
-		"user": newUser})
+		"user":    newUser})
 }
-
-
-
-

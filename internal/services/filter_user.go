@@ -1,37 +1,26 @@
 package services
 
 import (
-	"flag"
-	"log"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
-	"github.com/kwakubiney/canonical-take-home/internal/domain/model"
+	"net/http"
 )
 
-func (u *UserService) FindUser(c *gin.Context){
-	var newUser model.User
-	var createUserRequest CreateUserRequest
-	err := c.BindJSON(&createUserRequest)
-	if err != nil { 
-		log.Println(err)
-		flag.Usage()
-		c.Status(http.StatusBadRequest)
+func (u *UserService) FilterUser(c *gin.Context) {
+	by := u.c.Options.By
+	whereClause := c.Query(by)
+	if by == "" || whereClause == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "could not parse request. check usage",
+		})
 		return
 	}
 
-	newUser.Age = createUserRequest.Age
-	newUser.Email = createUserRequest.Email
-	newUser.Username = createUserRequest.Username
-
-	err = u.r.CreateUser(newUser)
+	filteredUser, err := u.r.FilterUser(by, whereClause)
 	if err != nil {
-		log.Println(err)
-		flag.Usage()
 		c.Status(http.StatusInternalServerError)
 		return
 	}
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "user successfully created",
-		"user": newUser})
+	c.JSON(http.StatusOK, gin.H{
+		"message": "user successfully filtered",
+		"user":    filteredUser})
 }
