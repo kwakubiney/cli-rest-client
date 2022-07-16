@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUpdateUser200(t *testing.T) {
+func TestUpdateUserEndpoint(t *testing.T) {
 	user := services.CreateTestUser(t)
 	services.SeedDB(user)
 	updateUserRequest := services.MakeTestRequest(t, fmt.Sprintf("/User?username=%s", user.Username), map[string]interface{}{

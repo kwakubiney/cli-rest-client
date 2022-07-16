@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func TestFilterUser200(t *testing.T) {
+func TestFilterUserEndpoint(t *testing.T) {
 	user := services.CreateTestUser(t)
 	services.SeedDB(user)
 	updateUserRequest := services.MakeTestRequest(t, fmt.Sprintf("/User?username=%s", user.Username), map[string]interface{}{
