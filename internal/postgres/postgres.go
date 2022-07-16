@@ -6,7 +6,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	//"gorm.io/gorm/logger"
+	"gorm.io/gorm/logger"
 )
 
 func ConstructDatabaseURI() string {
@@ -27,10 +27,10 @@ func Init() (*gorm.DB, error) {
 
 	databaseUrl := ConstructDatabaseURI()
 
-	db, err := gorm.Open(postgres.Open(databaseUrl))
-	// &gorm.Config{
-	// 	Logger: logger.Default.LogMode(logger.Info),
-	// }
+	db, err := gorm.Open(postgres.Open(databaseUrl),&gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info),
+	})
+	
 	if err != nil {
 		return nil, err
 	}

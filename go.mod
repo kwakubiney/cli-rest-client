@@ -4,6 +4,8 @@ go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
+	github.com/gofrs/uuid v4.0.0+incompatible
+	github.com/jaswdr/faker v1.12.0
 	github.com/joho/godotenv v1.4.0
 	github.com/stretchr/testify v1.8.0
 	gorm.io/driver/postgres v1.3.8
