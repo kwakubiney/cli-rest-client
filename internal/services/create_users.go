@@ -22,7 +22,9 @@ func (u *UserService) CreateUser(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		flag.Usage()
-		c.Status(http.StatusBadRequest)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "could not parse request. check usage.",
+		})
 		return
 	}
 

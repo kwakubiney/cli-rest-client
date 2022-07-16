@@ -21,7 +21,7 @@ func New(services *services.UserService) *Server {
 	gin.SetMode(gin.ReleaseMode)
 	return &Server{
 		service: services,
-		e:       gin.New(),
+		e:       gin.Default(),
 	}
 }
 

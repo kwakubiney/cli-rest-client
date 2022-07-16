@@ -73,7 +73,9 @@ func (s *CliHandler) Dispatch() error {
 			if !command.ValidateCreateandUpdateUserFields(s.Options.Method, updateFieldKeys) {
 				return errors.New("unrecognizable command")
 			}
+
 			s.Options.FieldKeys, s.Options.MapData = updateFieldKeys, mapOfData
+	
 
 		//handle validation on db level
 		case "filter":
@@ -96,12 +98,12 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 	if clientHandler.Options.Method == "create" {
 		fmt.Println("Creating user...........")
 		fmt.Println("=> POST https://localhost/user\n" +
-		"<=")
+			"<=")
 		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "POST")
 		if err != nil {
 			return err
 		}
-		
+
 		if resp.StatusCode == http.StatusCreated {
 			bodyBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
@@ -110,7 +112,7 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 			fmt.Println("<=== Resp Status: 201")
 			fmt.Println("===> Response:")
 			PrettyPrint(bodyBytes)
-		}else{
+		} else {
 			bodyBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return err
@@ -124,9 +126,11 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 
 	if clientHandler.Options.Method == "update" {
 		fmt.Println("Updating user...........")
-		fmt.Println("=> PUT https://localhost/user\n" +
-		"<=")
-		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "PUT")
+		fmt.Println("=> PUT https://localhost/user?username=<name>\n" +
+			"<=")
+		//TODO: Allow updates based on other fields
+		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User?username=%s", os.Getenv("PORT"), clientHandler.Options.Where), 
+		requestBody, "PUT")
 		if err != nil {
 			return err
 		}
@@ -138,7 +142,7 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 			}
 			fmt.Println("===> Response:")
 			PrettyPrint(bodyBytes)
-		}else{
+		} else {
 			bodyBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return err
@@ -152,7 +156,10 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 
 	if clientHandler.Options.Method == "filter" {
 		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User?%s=%s", os.Getenv("PORT"),
-			clientHandler.Options.By, clientHandler.Options.Where), requestBody, "GET")
+			clientHandler.Options.By, clientHandler.Options.Where), map[string]interface{}{
+				"by": clientHandler.Options.By,
+			}, "GET")
+
 		if err != nil {
 			return err
 		}
@@ -167,16 +174,16 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 			PrettyPrint(bodyBytes)
 
 			return nil
-		}else{
-				bodyBytes, err := io.ReadAll(resp.Body)
-				if err != nil {
-					return err
-				}
-				fmt.Printf("===> Response:%d\n", resp.StatusCode)
-				PrettyPrint(bodyBytes)
-				clientHandler.Options.Flag.Usage()
+		} else {
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
 			}
-			return nil
+			fmt.Printf("===> Response:%d\n", resp.StatusCode)
+			PrettyPrint(bodyBytes)
+			clientHandler.Options.Flag.Usage()
 		}
+		return nil
+	}
 	return nil
 }
