@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"os"
 
@@ -16,18 +15,17 @@ import (
 
 func main() {
 	opts := &cli.Options{}
-	parser.ParseCommands(os.Args[1], opts)
+	parser.ParseCommands(os.Args, opts)
 	config.LoadNormalConfig()
 	db, err := postgres.Init()
 	if err != nil {
-		flag.Usage()
-		log.Fatal()
+		log.Fatal("database failed to start.")
 	}
 	repo := repository.NewUserRepository(db)
 	newCliHandler := cli.NewCliHandler(opts)
 	err = newCliHandler.Dispatch()
 	if err != nil {
-		flag.Usage()
+		opts.Flag.Usage()
 		log.Fatal()
 	}
 	userService := services.NewUserService(repo, newCliHandler)
@@ -36,8 +34,7 @@ func main() {
 
 	err = cli.ApiRequestDispatcher(newCliHandler)
 	if err != nil {
-		flag.Usage()
+		opts.Flag.Usage()
 		log.Fatal()
 	}
 }
-

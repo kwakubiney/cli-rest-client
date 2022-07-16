@@ -34,7 +34,9 @@ func (u *UserService) CreateUser(c *gin.Context) {
 	if err != nil {
 		log.Println(err)
 		flag.Usage()
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "user could not be created. check usage.",
+		})
 		return
 	}
 	c.JSON(http.StatusCreated, gin.H{

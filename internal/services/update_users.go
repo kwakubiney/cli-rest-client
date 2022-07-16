@@ -1,8 +1,6 @@
 package services
 
 import (
-	"flag"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,13 +8,9 @@ import (
 )
 
 func (u *UserService) UpdateUser(c *gin.Context) {
-	log.Println("=> PUT https://localhost/user\n" +
-		"<=")
 	var user model.User
 	err := c.BindJSON(&user)
 	if err != nil {
-		log.Println(err)
-		flag.Usage()
 		c.Status(http.StatusBadRequest)
 		return
 	}
@@ -24,9 +18,9 @@ func (u *UserService) UpdateUser(c *gin.Context) {
 	whereClause := u.c.Options.Where
 	err = u.r.UpdateUserByUsername(whereClause, user)
 	if err != nil {
-		log.Println(err)
-		flag.Usage()
-		c.Status(http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "user could not be updated. check usage",
+		})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

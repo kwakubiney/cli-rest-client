@@ -2,6 +2,7 @@ package cli
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -24,6 +25,7 @@ type Options struct {
 	FieldKeys    []string
 	Where        string
 	By           string
+	Flag         flag.FlagSet
 }
 
 type CliHandler struct {
@@ -38,8 +40,6 @@ func NewCliHandler(opts *Options) *CliHandler {
 
 func PrettyPrint(response []byte) error {
 	var prettyJSON bytes.Buffer
-
-
 	err := json.Indent(&prettyJSON, response, "", "\t")
 	if err != nil {
 		log.Println("JSON parse error: ", err)
@@ -50,7 +50,7 @@ func PrettyPrint(response []byte) error {
 }
 
 func (s *CliHandler) Dispatch() error {
-	if *s.Options.Help || s.Options.Method == "" || s.Options.TypeOfObject == "" {
+	if s.Options.TypeOfObject == "" {
 		return errors.New("unrecognizable command")
 	}
 
@@ -94,34 +94,58 @@ func (s *CliHandler) Dispatch() error {
 func ApiRequestDispatcher(clientHandler *CliHandler) error {
 	requestBody := clientHandler.Options.MapData
 	if clientHandler.Options.Method == "create" {
+		fmt.Println("Creating user...........")
+		fmt.Println("=> POST https://localhost/user\n" +
+		"<=")
 		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "POST")
 		if err != nil {
 			return err
 		}
-		if resp.StatusCode == http.StatusOK {
+		
+		if resp.StatusCode == http.StatusCreated {
 			bodyBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return err
 			}
-
+			fmt.Println("<=== Resp Status: 201")
 			fmt.Println("===> Response:")
 			PrettyPrint(bodyBytes)
+		}else{
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("===> Response:%d\n", resp.StatusCode)
+			PrettyPrint(bodyBytes)
+			clientHandler.Options.Flag.Usage()
 		}
+
 	}
 
 	if clientHandler.Options.Method == "update" {
+		fmt.Println("Updating user...........")
+		fmt.Println("=> PUT https://localhost/user\n" +
+		"<=")
 		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/User", os.Getenv("PORT")), requestBody, "PUT")
 		if err != nil {
 			return err
 		}
 		if resp.StatusCode == http.StatusOK {
-			fmt.Println("<=== Rsp Status: 200 OK")
+			fmt.Println("<=== Resp Status: 200 OK")
 			bodyBytes, err := io.ReadAll(resp.Body)
 			if err != nil {
 				return err
 			}
 			fmt.Println("===> Response:")
 			PrettyPrint(bodyBytes)
+		}else{
+			bodyBytes, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return err
+			}
+			fmt.Printf("===> Response:%d\n", resp.StatusCode)
+			PrettyPrint(bodyBytes)
+			clientHandler.Options.Flag.Usage()
 		}
 		return nil
 	}
@@ -143,9 +167,16 @@ func ApiRequestDispatcher(clientHandler *CliHandler) error {
 			PrettyPrint(bodyBytes)
 
 			return nil
+		}else{
+				bodyBytes, err := io.ReadAll(resp.Body)
+				if err != nil {
+					return err
+				}
+				fmt.Printf("===> Response:%d\n", resp.StatusCode)
+				PrettyPrint(bodyBytes)
+				clientHandler.Options.Flag.Usage()
+			}
+			return nil
 		}
-
-		
-	}
 	return nil
 }

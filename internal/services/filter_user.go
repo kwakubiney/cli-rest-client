@@ -1,28 +1,22 @@
 package services
 
 import (
-	"flag"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"log"
 	"net/http"
 )
 
 func (u *UserService) FilterUser(c *gin.Context) {
-	fmt.Println("Getting user...........")
-	fmt.Println("=> GET https://localhost/user\n" +
-		"<=")
 	by := u.c.Options.By
 	whereClause := c.Query(by)
 	if by == "" || whereClause == "" {
-		c.Status(http.StatusBadRequest)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "could not parse request. check usage",
+		})
 		return
 	}
 
 	filteredUser, err := u.r.FilterUser(by, whereClause)
 	if err != nil {
-		log.Println(err)
-		flag.Usage()
 		c.Status(http.StatusInternalServerError)
 		return
 	}
