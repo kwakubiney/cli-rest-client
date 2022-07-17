@@ -20,12 +20,11 @@ type Options struct {
 	Method       string
 	TypeOfObject string
 	Fields       string
-	Help         *bool
 	MapData      map[string]string
 	FieldKeys    []string
 	Where        string
 	By           string
-	Flag         flag.FlagSet
+	Flag         *flag.FlagSet
 }
 
 type CliHandler struct {
@@ -65,7 +64,6 @@ func ResponseByStatusCode(resp *http.Response, clientHandler *CliHandler) error{
 		}
 		fmt.Printf("===> Response:%d\n", resp.StatusCode)
 		PrettyPrint(bodyBytes)
-		clientHandler.Options.Flag.Usage()
 	}	
 return nil
 }

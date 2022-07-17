@@ -1,6 +1,6 @@
 -- +goose Up
 
--- TODO: Make age an integer
+-- TODO: Make age an integer/not? depends on use case.
 CREATE TABLE IF NOT EXISTS users 
 (
 	id 				UUID 		PRIMARY KEY DEFAULT gen_random_uuid(),	
