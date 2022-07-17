@@ -16,16 +16,16 @@ func TestParseFields(t *testing.T) {
 	assert.Equal(t, map[string]string{"username": "kwame", "age": "9", "email": "kwakubiney@gmail.com"}, mapOfData)
 }
 
-func TestValidateCreateAndUpdateUserFields(t *testing.T) {
-	ok := command.ValidateCreateandUpdateUserFields("create", []string{"username", "age", "email"})
+func TestValidateFields(t *testing.T) {
+	ok := command.ValidateFields("create", []string{"username", "age", "email"}, "user")
 	assert.Equal(t, true, ok)
 
-	ok = command.ValidateCreateandUpdateUserFields("create", []string{"user", "age"})
+	ok = command.ValidateFields("create", []string{"use", "age"}, "game")
 	assert.Equal(t, false, ok)
 
-	ok = command.ValidateCreateandUpdateUserFields("update", []string{"user", "age"})
+	ok = command.ValidateFields("update", []string{"user", "age"}, "user")
 	assert.Equal(t, false, ok)
 
-	ok = command.ValidateCreateandUpdateUserFields("update", []string{"username", "age", "email"})
+	ok = command.ValidateFields("update", []string{"username", "age", "email"}, "user")
 	assert.Equal(t, true, ok)
 }

@@ -75,6 +75,21 @@ func CreateTestUser(t *testing.T) *model.User {
 	return &testUser
 }
 
+
+func CreateTestGame(t *testing.T) *model.Game {
+	f := faker.New()
+
+	testGame := model.Game{
+		AgeRating:  "12+",
+		URL:         f.Internet().URL(),
+		Description: f.Lorem().Sentence(200),
+		Publisher:   f.Company().Name(),
+		Title:       f.App().Name(),
+	}
+
+	return &testGame
+}
+
 func BootstrapServer(req *http.Request, routeHandlers *gin.Engine) *httptest.ResponseRecorder {
 	responseRecorder := httptest.NewRecorder()
 	routeHandlers.ServeHTTP(responseRecorder, req)

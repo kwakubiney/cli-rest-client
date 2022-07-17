@@ -11,4 +11,5 @@ type Game struct {
 	Description string `json:"description"`
 	URL         string `json:"url"`
 	Publisher   string `json:"publisher"`
+	AgeRating   string   `json:"age_rating"`
 }

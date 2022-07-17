@@ -27,10 +27,12 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	repo := repository.NewUserRepository(db)
+	userRepo := repository.NewUserRepository(db)
+	gameRepo := repository.NewGameRepository(db)
 	newCliHandler := cli.NewCliHandler(opts)
-	userService := services.NewUserService(repo, newCliHandler)
-	server := server.New(userService)
+	userService := services.NewUserService(userRepo, newCliHandler)
+	gameService := services.NewGameService(gameRepo, newCliHandler)
+	server := server.New(userService, gameService)
 	engine = server.SetupRoutes()
 	os.Exit(m.Run())
 }

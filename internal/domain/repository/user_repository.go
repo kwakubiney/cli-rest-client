@@ -27,6 +27,7 @@ func (u *UserRepository) CreateUser(user model.User) error {
 	return u.db.Create(&user).Error
 }
 
+
 // Update user by username
 func (u *UserRepository) UpdateUserByUsername(username string, user model.User) error {
 	db :=  u.db.Model(model.User{}).Where("username = ?", username).Find(&user)
