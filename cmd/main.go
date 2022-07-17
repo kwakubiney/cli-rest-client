@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"flag"
+	"fmt"
 
 	"github.com/kwakubiney/canonical-take-home/internal/config"
 	"github.com/kwakubiney/canonical-take-home/internal/domain/repository"
@@ -13,8 +15,23 @@ import (
 	"github.com/kwakubiney/canonical-take-home/parser"
 )
 
+
+const genericUsageString = 
+`
+These are common subcommands used in various situations:
+	create     Create a new record in the database
+	filter     Filter a record in the database
+	update     Update a record in the database`
+
+
+
 func main() {
 	opts := &cli.Options{}
+	flag.Usage = func() {
+		fmt.Printf("Usage:[--help]\n")
+		fmt.Println(genericUsageString)
+	}
+	flag.Parse()
 	parser.ParseCommands(os.Args, opts)
 	config.LoadNormalConfig()
 	db, err := postgres.Init()
@@ -27,6 +44,7 @@ func main() {
 	newCliHandler := cli.NewCliHandler(opts)
 	err = newCliHandler.Dispatch()
 	if err != nil {
+		log.Println(opts.Flag)
 		opts.Flag.Usage()
 		log.Fatal()
 	}

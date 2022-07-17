@@ -1,8 +1,9 @@
 package command
 
-import (
+import(
 	"strings"
 )
+
 
 func ParseFields(arguments string) ([]string, map[string]string) {
 	var fieldKeys []string
@@ -42,3 +43,4 @@ func ValidateFields(method string, fieldKeys []string, typeOfObject string) bool
 	}
 	return true
 }
+
