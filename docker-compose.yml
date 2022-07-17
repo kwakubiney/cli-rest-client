@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  dbnew:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=gamedev
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
