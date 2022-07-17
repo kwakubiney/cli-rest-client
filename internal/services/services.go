@@ -10,9 +10,22 @@ type UserService struct {
 	c cli.CliHandler
 }
 
-func NewUserService(repository *repository.UserRepository, cliHandler *cli.CliHandler) *UserService {
+type GameService struct {
+	r repository.GameRepository
+	c cli.CliHandler
+}
+
+func NewUserService(userRepository *repository.UserRepository, cliHandler *cli.CliHandler) *UserService {
 	return &UserService{
+		r: *userRepository,
+		c: *cliHandler,
+	}
+}
+
+func NewGameService(repository *repository.GameRepository, cliHandler *cli.CliHandler) *GameService {
+	return &GameService{
 		r: *repository,
 		c: *cliHandler,
 	}
 }
+

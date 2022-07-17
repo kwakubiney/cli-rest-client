@@ -3,7 +3,6 @@ package parser
 import (
 	"flag"
 	"fmt"
-
 	"github.com/kwakubiney/canonical-take-home/internal/handlers/cli"
 )
 
@@ -15,9 +14,9 @@ func ParseCommands(args []string, opts *cli.Options) {
 		opts.Method = args[1]
 
 		createFlag.StringVar(&opts.TypeOfObject, "type", "", "Specify type of repository:\n"+
-			"Example: -type user")
+			"Example: -type user/game")
 
-		createFlag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user(s) data, available repositories:\n"+
+		createFlag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user/game(s) data, available repositories:\n"+
 			"Example: -fields username=kwame,age=9,email=kwakubiney@gmail.com")
 
 		createFlag.Parse(args[2:])
@@ -33,10 +32,10 @@ func ParseCommands(args []string, opts *cli.Options) {
 		updateFlag.StringVar(&opts.TypeOfObject, "type", "", "Specify type of repository:\n"+
 			"Example: -type user")
 
-		updateFlag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user(s) data, available repositories:\n"+
+		updateFlag.StringVar(&opts.Fields, "fields", "", "Specify fields to retrieve, create or update user/game(s) data, available repositories:\n"+
 			"Example: -fields username=kwame,age=9,email=kwakubiney@gmail.com")
 
-		updateFlag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user data:\n"+
+		updateFlag.StringVar(&opts.Where, "where", "", "Specify where to retrieve or update user/game data:\n"+
 			"Example(where is limited to object's name): -where kb")
 
 		updateFlag.Parse(args[2:])
@@ -67,3 +66,5 @@ func ParseCommands(args []string, opts *cli.Options) {
 	}
 
 }
+
+

@@ -12,23 +12,29 @@ import (
 )
 
 type Server struct {
-	service *services.UserService
+	userService *services.UserService
+	gameService *services.GameService
 	e       *gin.Engine
 	srv     http.Server
 }
 
-func New(services *services.UserService) *Server {
+func New(userService *services.UserService, gameService *services.GameService) *Server {
 	gin.SetMode(gin.ReleaseMode)
 	return &Server{
-		service: services,
+		userService: userService,
+		gameService: gameService,
 		e:       gin.Default(),
 	}
 }
 
 func (s *Server) SetupRoutes() *gin.Engine {
-	s.e.POST("/User", s.service.CreateUser)
-	s.e.PUT("/User", s.service.UpdateUser)
-	s.e.GET("/User", s.service.FilterUser)
+	s.e.POST("/User", s.userService.CreateUser)
+	s.e.PUT("/User", s.userService.UpdateUser)
+	s.e.GET("/User", s.userService.FilterUser)
+	s.e.POST("/Game", s.gameService.CreateGame)
+	s.e.GET("/Game", s.gameService.FilterGame)
+	s.e.PUT("/Game", s.gameService.UpdateGame)
+	
 	return s.e
 }
 

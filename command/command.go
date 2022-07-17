@@ -16,15 +16,22 @@ func ParseFields(arguments string) ([]string, map[string]string) {
 	return fieldKeys, mapOfFields
 }
 
-func ValidateCreateandUpdateUserFields(method string, fieldKeys []string) bool {
-	createUserFields := []string{"username", "age", "email"}
+func ValidateFields(method string, fieldKeys []string, typeOfObject string) bool {
+	var validFields []string
+
+	if typeOfObject == "user"{
+		validFields = []string{"username", "age", "email"}
+	}else {
+		validFields = []string{"description", "age_rating", "title", "publisher", "url"}
+	}
+
 	if method == "create" {
-		if len(createUserFields) != len(fieldKeys) {
+		if len(validFields) != len(fieldKeys) {
 			return false
 		}
 	}
 	exists := make(map[string]bool)
-	for _, value := range createUserFields {
+	for _, value := range validFields {
 		exists[value] = true
 	}
 

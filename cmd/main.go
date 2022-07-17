@@ -21,15 +21,18 @@ func main() {
 	if err != nil {
 		log.Fatal("database failed to start.")
 	}
-	repo := repository.NewUserRepository(db)
+	userRepo := repository.NewUserRepository(db)
+	gameRepo := repository.NewGameRepository(db)
+	
 	newCliHandler := cli.NewCliHandler(opts)
 	err = newCliHandler.Dispatch()
 	if err != nil {
 		opts.Flag.Usage()
 		log.Fatal()
 	}
-	userService := services.NewUserService(repo, newCliHandler)
-	server := server.New(userService)
+	userService := services.NewUserService(userRepo, newCliHandler)
+	gameService := services.NewGameService(gameRepo, newCliHandler)
+	server := server.New(userService, gameService)
 	server.Start()
 
 	err = cli.ApiRequestDispatcher(newCliHandler)
