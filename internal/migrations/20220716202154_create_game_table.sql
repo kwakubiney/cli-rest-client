@@ -11,3 +11,5 @@ CREATE TABLE IF NOT EXISTS games
 
 -- +goose Down
 DROP TABLE IF EXISTS games;
+
+
