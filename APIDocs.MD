@@ -1,3 +1,8 @@
+## Database Structure
+
+I simply use a Users and Games table with the fields described in the take home assignment description. 
+
+Database table creation can be seen in migration files in `internal/migrations`
 
 ## API Endpoints
 
