@@ -22,92 +22,95 @@ Assuming we built binary and named it `gamedev`
 
 **Usage**
 
+```
 These are common subcommands used in various situations:
 	create     Create a new record in the database
 	filter     Filter a record in the database
-	update     Update a record in the database`
+	update     Update a record in the database
+```
 
 
-create subcommand usage = 
-`NAME
-       create - Create a new record in the database
+**create**
 
-SYNOPSIS
-        create [--type] [--fields]
+* NAME
+-  create - Create a new record in the database
 
-DESCRIPTION
-       This command creates a new record in the repository.
+* SYNOPSIS
+- create [--type] [--fields]
 
-
-FLAG VALUES
-		<type>...
-			Specifies the repository in which the record is to be created in. 
-			Available repositories include <game> and <user> .
-
-		<fields>...
-			Specifies ALL the fields needed to be populated to create the record.
-			Fields used depend on the repository selected.	
-			Values are specified strictly in this format: 
-			--fields username=john,age=44,email=k@mail.com
-			Allowed fields for <user> repository are: [username, age, email]
-			Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]`
+* DESCRIPTION
+- This command creates a new record in the repository.
 
 
+* FLAG VALUES
+- <type>...
+Specifies the repository in which the record is to be created in. 
+Available repositories include <game> and <user> .
 
-update subcommand usage:
+- <fields>...
+Specifies ALL the fields needed to be populated to create the record.
+Fields used depend on the repository selected.	
+Values are specified strictly in this format: 
+--fields username=john,age=44,email=k@mail.com
+Allowed fields for <user> repository are: [username, age, email]
+Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]`
 
-NAME
-       update - Update a record in the database
 
-SYNOPSIS
-        update [--type] [--fields] [--where]
+- update subcommand usage:
 
-DESCRIPTION
-       This command updates a record in the repository.
+* NAME
+- update - Update a record in the database
+
+* SYNOPSIS
+- update [--type] [--fields] [--where]
+
+* DESCRIPTION
+- This command updates a record in the repository.
 
 	
-FLAG VALUES
-		<type>...
-			Specifies the repository in which the record is to be updated in. 
-			Available repositories include <game> and <user> .
 
-		<fields>...
-			Specifies ALL the fields needed to be populated to create the record.
-			Fields used depend on the repository selected.
-			Values are specified strictly in this format: --fields username=john,age=44,email=k@mail.com
-			Allowed fields for <user> repository are: [username, age, email]
-			Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]
+* FLAG VALUES
+- <type>...
+Specifies the repository in which the record is to be updated in. 
+Available repositories include <game> and <user> .
+
+- <fields>...
+Specifies ALL the fields needed to be populated to create the record.
+Fields used depend on the repository selected.
+Values are specified strictly in this format: --fields username=john,age=44,email=k@mail.com
+Allowed fields for <user> repository are: [username, age, email]
+Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]
 			
-		<where>...
-			Specifies the where clause value.
-			Records to be updated are filtered only by the username (when using the user repo) or title 
-			(when using the game repository)`
+- <where>...
+Specifies the where clause value.
+Records to be updated are filtered only by the username (when using the user repo) or title 
+(when using the game repository)`
 
 
-filter subcommand usage:
+- filter subcommand usage:
 
-NAME
-       filter - Filter a record in the database
+* NAME
+- filter - Filter a record in the database
+  
+* SYNOPSIS
+- update [--type] [--where] [--by]
 
-SYNOPSIS
-        update [--type] [--where] [--by]
-
-DESCRIPTION
-       This command filters a record in the repository by a field value.
+* DESCRIPTION
+- This command filters a record in the repository by a field value.
 
 	   
-FLAG VALUES
-		<type>...
-			Specifies the repository in which the record is to be filtered in. 
-			Available repositories include <game> and <user> .
+* FLAG VALUES
+- <type>...
+Specifies the repository in which the record is to be filtered in. 
+Available repositories include <game> and <user> .
 
-		<by>...
-			Specifies the field for which the record will be filtered by.
-			Field used depend on the repository selected.
-			Allowed fields for <user> repository are: [username, age, email]
-			Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]
+- <by>...
+Specifies the field for which the record will be filtered by.
+Field used depend on the repository selected.
+Allowed fields for <user> repository are: [username, age, email]
+Allowed fields for <game> repository are: [title, description, url, publisher, age_rating]
 			
-		<where>...
-			Specifies the specific value to be filtered by and must be a value of the <by> field specified.
-			Records to be updated are filtered only by the username (when using the user repo) or title 
-			(when using the game repository).`
+- <where>...
+Specifies the specific value to be filtered by and must be a value of the <by> field specified.
+Records to be updated are filtered only by the username (when using the user repo) or title 
+(when using the game repository).`
