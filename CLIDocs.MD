@@ -78,8 +78,6 @@ FLAG VALUES
 			Records to be updated are filtered only by the username (when using the user repo) or title 
 			(when using the game repository)
 
-
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 NAME
        filter - Filter a record in the database
 
