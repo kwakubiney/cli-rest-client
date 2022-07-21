@@ -76,7 +76,7 @@ const filterUsageString =
        filter - Filter a record in the database
 
 SYNOPSIS
-        update [--type] [--where] [--by]
+        filter [--type] [--where] [--by]
 
 DESCRIPTION
        This command filters a record in the repository by a field value.
