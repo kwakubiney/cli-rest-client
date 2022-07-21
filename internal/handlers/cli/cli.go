@@ -79,7 +79,6 @@ func DispatchHelper(s *CliHandler) error{
 			}
 			createFieldKeys, mapofData := command.ParseFields(s.Options.Fields)
 			s.Options.FieldKeys, s.Options.MapData = createFieldKeys, mapofData
-			log.Println(mapofData)
 			if !command.ValidateFields(s.Options.Method, createFieldKeys, s.Options.TypeOfObject) {
 				return errors.New("unrecognizable command")
 			}
@@ -184,7 +183,6 @@ if clientHandler.Options.TypeOfObject == "game"{
 	}
 
 	if clientHandler.Options.Method == "filter" {
-		log.Println(clientHandler.Options.By, clientHandler.Options.Where)
 		resp, err := utils.MakeRequest(fmt.Sprintf("http://127.0.0.1:%s/Game?%s=%s", os.Getenv("PORT"),
 			clientHandler.Options.By, clientHandler.Options.Where), map[string]interface{}{
 				"by": clientHandler.Options.By,

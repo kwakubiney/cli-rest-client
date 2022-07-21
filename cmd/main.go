@@ -44,7 +44,6 @@ func main() {
 	newCliHandler := cli.NewCliHandler(opts)
 	err = newCliHandler.Dispatch()
 	if err != nil {
-		log.Println(opts.Flag)
 		opts.Flag.Usage()
 		log.Fatal()
 	}

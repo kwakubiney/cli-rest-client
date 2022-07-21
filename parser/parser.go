@@ -130,11 +130,12 @@ func ParseCommands(args []string, opts *cli.Options) {
 		updateFlag.StringVar(&opts.Fields, "fields", "", "")
 		updateFlag.StringVar(&opts.Where, "where", "", "")
 
-		updateFlag.Parse(args[2:])
 		updateFlag.Usage = func() {
 			fmt.Printf("Usage:\n")
 			fmt.Println(updateUsageString)
 		}
+
+		updateFlag.Parse(args[2:])
 
 	case "filter":
 		filterFlag := flag.NewFlagSet("filter", flag.ExitOnError)
@@ -145,11 +146,12 @@ func ParseCommands(args []string, opts *cli.Options) {
 		filterFlag.StringVar(&opts.Where, "where", "", "")
 		filterFlag.StringVar(&opts.By, "by", "", "")
 		
-		filterFlag.Parse(args[2:])
 		filterFlag.Usage = func() {
 			fmt.Printf("Usage:\n")
 			fmt.Println(filterUsageString)
 		}
+
+		filterFlag.Parse(args[2:])
 	default:
 		flag.Usage = func() {
 			fmt.Printf("Usage:\n")
