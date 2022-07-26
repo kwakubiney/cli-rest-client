@@ -1,6 +1,9 @@
-This client uses subcommands and flags to make API requests.
+**General Description of Client**
 
-Assuming we built binary and named it `gamedev`
+- This client uses subcommands and flags to make API requests.
+
+
+* Assuming we built binary and named it `gamedev` :
 
 * All subcommands can be seen by passing the `-- help` flag
     - Example => `./gamedev --help`
@@ -13,13 +16,14 @@ Assuming we built binary and named it `gamedev`
 
 * Sample flow for creating a user
 
-After building the go project and spinning DockerCompose:
+- After building the go project and spinning DockerCompose:
 
-Assuming we built binary and named it `gamedev`
+- Assuming we built binary and named it `gamedev`, we can run:
 
-1) `./gamedev create -type user --fields username=john,age=44,email=k@mail.com`
+	`./gamedev create -type user --fields username=john,age=44,email=k@mail.com`
 
 
+*Following illustrates further details about the CLI:*
 ```
 These are common subcommands used in various situations:
 	create     Create a new record in the database
