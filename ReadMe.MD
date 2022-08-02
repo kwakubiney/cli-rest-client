@@ -10,7 +10,7 @@ This client makes REST API requests using the CLI.
 
 - You can modify .env but it is compatible with postgres service being spun. If modified, `docker-compose.yaml` must be modified to correspond.
 
-- `cd` into `internal/migrations` and run `goose postgres "user=postgres password=postgres dbname=gamedev sslmode=disable" up` to make migrations.
+- `cd` into `internal/migrations` and run `goose postgres "postgresql://postgres:postgres@localhost:5432/gamedev?sslmode=disable" up` to make migrations.
 
 - Build the go project with `go build -o gamedev cmd/main.go` in root and run `--help` to see subcommands, you can check out [CLI documentation](CLIDocs.MD)
 

@@ -9,4 +9,3 @@ services:
       - POSTGRES_DB=gamedev
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-
