@@ -1,4 +1,4 @@
-# Canonical Take Home REST Client
+# CLI REST client
 
 This client makes REST API requests using the CLI.
 
