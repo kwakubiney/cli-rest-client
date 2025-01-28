@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "module": "ESNext",          // Use ES Modules
+      "target": "ES6",             // Target modern JavaScript
+      "moduleResolution": "Node",  // Resolve modules as Node.js would
+      "esModuleInterop": true,     // Enable interoperability with CommonJS
+      "skipLibCheck": true         // Skip type checks on library imports
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@types/node": "^22.12.0",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "type": "module",
+    "execa": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^latest"
+  }
+}
